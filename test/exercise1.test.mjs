@@ -33,4 +33,60 @@ describe("Exercise 1 - validateArrayElements", function () {
       { value: products[2], isValid: true }
     ]);
   });
+  it("validates an empty array", function () {
+  const result = validateArrayElements([], element => true);
+
+  expect(result).to.deep.equal([]);
+});
+
+it("validates all elements as valid", function () {
+  const numbers = [1, 2, 3];
+
+  const result = validateArrayElements(numbers, number => true);
+
+  expect(result).to.deep.equal([
+    { value: 1, isValid: true },
+    { value: 2, isValid: true },
+    { value: 3, isValid: true }
+  ]);
+});
+
+it("validates all elements as invalid", function () {
+  const numbers = [1, 2, 3];
+
+  const result = validateArrayElements(numbers, number => false);
+
+  expect(result).to.deep.equal([
+    { value: 1, isValid: false },
+    { value: 2, isValid: false },
+    { value: 3, isValid: false }
+  ]);
+});
+
+it("validates values of different types", function () {
+  const values = [1, "hello", true];
+
+  const result = validateArrayElements(
+    values,
+    value => typeof value === "number"
+  );
+
+  expect(result).to.deep.equal([
+    { value: 1, isValid: true },
+    { value: "hello", isValid: false },
+    { value: true, isValid: false }
+  ]);
+});
+
+it("calls the validator once per element", function () {
+  const numbers = [1, 2, 3];
+  let calls = 0;
+
+  validateArrayElements(numbers, number => {
+    calls++;
+    return true;
+  });
+
+  expect(calls).to.equal(3);
+});
 });
